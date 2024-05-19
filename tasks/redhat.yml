@@ -1,0 +1,28 @@
+---
+###########################################################
+# Add Microsoft Repository and GPG Key
+###########################################################
+- name: Add Microsoft Repository
+  ansible.builtin.yum_repository:
+    name: microsoft-prod
+    description: Microsoft Repository
+    baseurl: '{{ microsoft_rpm_repo_url }}'
+    gpgcheck: true
+    gpgkey: '{{ microsoft_gpg_key_url }}'
+    enabled: true
+    state: present
+- name: Install Microsoft RPM Key
+  ansible.builtin.rpm_key:
+    key: '{{ microsoft_gpg_key_url }}'
+    state: present
+    validate_certs: '{{ trust_repository_certs }}'
+
+###########################################################
+# Install PowerShell App
+###########################################################
+- name: Install PowerShell Application
+  ansible.builtin.dnf:
+    name:
+      - powershell
+    state: present
+    validate_certs: '{{ trust_repository_certs }}'
